@@ -83,7 +83,7 @@ class Messenger extends React.Component {
             style={{ border: 'none', borderRadius: '10px 10px 0px 0px' }}
           >
             <Container>
-              <Navbar.Brand href="#home">Messenger</Navbar.Brand>
+              <Navbar.Brand>Messenger</Navbar.Brand>
               <Navbar.Collapse id="basic-navbar-nav"></Navbar.Collapse>
               <Nav className="justify-content-end">
                 <button type="submit" onClick={this.download}>
