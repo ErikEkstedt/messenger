@@ -1,0 +1,76 @@
+:root {
+    --main-color: #E041A7;
+    --secondary-color: white;
+    --main-text-color: #3e5869;
+    --secondary-text-color: #b0c7d6;
+    --send-message-form: #F5F5F5;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui;
+    font-weight: 200;
+    color: #3e5869; 
+    text-align: center;
+}
+
+#root {
+    height: 100%;
+}
+
+.messenger {
+  text-align: center;
+  width: 95%;
+  margin: 10px auto; 
+  border: 1px solid;
+  border-radius: 10px;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    color: var(--secondary-color);
+    background: var(--main-color);
+    box-sizing: border-box;
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px 10px 0px 0px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .messenger-logo {
+    animation: Messenger-logo-spin infinite 20s linear;
+  }
+}
+
+.messenger-link {
+  color: #61dafb;
+}
+
+@keyframes Messenger-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.message-list {
+    box-sizing: border-box;
+    background: white;
+    list-style: none;
+}
+
+.message {
+    margin: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    text-align: left;
+}
