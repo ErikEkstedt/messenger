@@ -63,10 +63,6 @@ export default class App extends React.Component {
       });
   }
 
-  clear() {
-    this.setState({ messages: [] });
-  }
-
   download() {
     if (this.state.messages.length === 0) {
       alert('Dialog is empty!');
