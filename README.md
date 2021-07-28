@@ -2,8 +2,24 @@
 
 A simple chat messenger.
 
+```javascript
+class Example extends React.Component {
+  // Code
 
-### Todo
+  messageHook(messageArray) {
+    /* [
+        {
+            "senderId": "Bot", // "User"
+            "text": "Hello there and welcome!",
+            "time": "2021-07-28T09:15:14.975Z"
+        }, ...
+      ]
+    */
+    console.log(messageArray);
+  }
 
-- [ ] Make it possible to inject a hook from another component into `sendMessage`
-  - Put `Messenger` inside of a webpage and when user provides text we can call different backend-endpoints based on any particular task.
+  render() {
+    return <Messenger messageHook={this.messageHook} />;
+  }
+}
+```
