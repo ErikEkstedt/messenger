@@ -1,33 +1,25 @@
 import React, { useState } from 'react';
 import { BsDownload } from 'react-icons/bs';
+import { VscDebugRestart } from 'react-icons/vsc';
 
 import {
-  Container,
-  Row,
+  Button,
   Col,
+  Container,
   Form,
-  ToggleButton,
-  ToggleButtonGroup,
-  Navbar,
   Nav,
+  Navbar,
+  Row,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Messenger.css';
 
-const DUMMY_DATA = [
-  {
-    senderId: 'Bot',
-    text: 'Hello there and welcome!',
-    time: new Date(),
-  },
-];
-
-function exportToJson(objectData, filename) {
+export function exportToJson(objectData, filename) {
   // https://stackoverflow.com/questions/45941684/save-submitted-form-values-in-a-json-file-using-react#62128055
   let contentType = 'application/json;charset=utf-8;';
   if (window.navigator && window.navigator.msSaveOrOpenBlob) {
     var blob = new Blob(
-      [decodeURIComponent(encodeURI(JSON.stringify(objectData)))],
+      [decodeURIComponent(encodeURI(JSON.stringify(objectData, null, 1)))],
       { type: contentType }
     );
     navigator.msSaveOrOpenBlob(blob, filename);
@@ -38,7 +30,7 @@ function exportToJson(objectData, filename) {
       'data:' +
       contentType +
       ',' +
-      encodeURIComponent(JSON.stringify(objectData));
+      encodeURIComponent(JSON.stringify(objectData, null, 1));
     a.target = '_blank';
     document.body.appendChild(a);
     a.click();
@@ -46,7 +38,33 @@ function exportToJson(objectData, filename) {
   }
 }
 
-function MessageList(props) {
+export function MessageNav(props) {
+  const btnStyle = { margin: '5px 5px' };
+  return (
+    <Row>
+      <Navbar
+        bg="light"
+        style={{ border: 'none', borderRadius: '10px 10px 0px 0px' }}
+      >
+        <Container>
+          <Navbar.Brand href="#home">{props.title}</Navbar.Brand>
+          <Navbar.Collapse id="basic-navbar-nav"></Navbar.Collapse>
+          <Nav className="justify-content-end">
+            <button type="submit" onClick={props.clear} style={btnStyle}>
+              {' '}
+              <VscDebugRestart />{' '}
+            </button>
+            <button type="submit" onClick={props.download} style={btnStyle}>
+              {' '}
+              <BsDownload />{' '}
+            </button>
+          </Nav>
+        </Container>
+      </Navbar>
+    </Row>
+  );
+}
+export function MessageList(props) {
   let messages = props.messages.map((message, index) => {
     // Different styles based on id
     var color = '#EEEEEE';
@@ -78,111 +96,78 @@ function MessageList(props) {
   );
 }
 
-function SendMessageForm(props) {
+export function MessageForm(props) {
+  const userBackground = '#EEEEEE';
+  const userPlaceHolder = 'Type user message and hit ENTER';
+  const botBackground = '#EEA0A0';
+  const botPlaceHolder = 'Type BOT message and hit ENTER';
   const [message, setMessage] = useState('');
   const [id, setId] = useState('User');
-
-  function handleText(e) {
-    setMessage(e.target.value);
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    props.sendMessage(message, id);
-    setMessage('');
-  }
+  const [background, setBackground] = useState(userBackground);
+  const [placeHolder, setPlaceHolder] = useState(userPlaceHolder);
 
   return (
-    <Row
-      style={{
-        padding: '10px',
-        background: '#EEEEEE',
-        border: 'none',
-        borderRadius: '0px 0px 10px 10px',
-      }}
-    >
-      <Col style={{ maxWidth: '180px', padding: '0px', margin: 'auto 0' }}>
-        {/* Change this to switch?  https://react-bootstrap.netlify.app/components/forms/#forms-custom-switch */}
-        <ToggleButtonGroup
-          type="radio"
-          name="interlocutor"
-          onChange={setId}
-          value={id}
-        >
-          <ToggleButton id="userBtn" value="User">
-            User
-          </ToggleButton>
-          <ToggleButton id="botBtn" value="Bot">
-            Bot
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </Col>
-      <Col style={{ padding: '0px', margin: '0px' }}>
-        <Form onSubmit={handleSubmit}>
-          <Form.Control
-            type="text"
-            placeholder="Type your message and hit ENTER"
-            onChange={handleText}
-            value={message}
-          />
-        </Form>
-      </Col>
-    </Row>
-  );
-}
-
-export default class Messenger extends React.Component {
-  constructor() {
-    super();
-    this.state = { messages: DUMMY_DATA };
-    this.sendMessage = this.sendMessage.bind(this);
-    this.download = this.download.bind(this);
-  }
-
-  sendMessage(text, id) {
-    let messages = [
-      ...this.state.messages,
-      { senderId: id, text: text, time: new Date() },
-    ];
-    this.setState({ messages: messages });
-    if (this.props.messageHook !== undefined) {
-      this.props.messageHook(messages);
-    }
-  }
-
-  download() {
-    if (this.state.messages.length === 0) {
-      alert('Dialog is empty!');
-    } else {
-      console.log('Download JSON');
-      exportToJson(this.state.messages, 'dialog.json');
-    }
-  }
-
-  render() {
-    return (
-      <Container className="messenger">
-        <Row>
-          <Navbar
-            bg="light"
-            style={{ border: 'none', borderRadius: '10px 10px 0px 0px' }}
+    <Container fluid style={{ padding: '0px' }}>
+      <Row
+        md={12}
+        lg={12}
+        style={{ background: background, padding: '20px 0px 0px 0px' }}
+      >
+        <Col md={1} lg={1}>
+          <Row>
+            <Form.Switch
+              onChange={(e) => {
+                if (e.target.value === 'User') {
+                  setId('Bot');
+                  setBackground(botBackground);
+                  setPlaceHolder(botPlaceHolder);
+                } else {
+                  setId('User');
+                  setBackground(userBackground);
+                  setPlaceHolder(userPlaceHolder);
+                }
+              }}
+              value={id}
+              id="role-switch"
+              style={{ padding: '0px 0px 0px 2.5em' }}
+            />
+          </Row>
+          <Row>
+            {' '}
+            <h6> Bot </h6>
+          </Row>
+        </Col>
+        <Col md={9} lg={9}>
+          <Form
+            onSubmit={(e) => {
+              e.preventDefault();
+              props.userInputMessage(message, id);
+              setMessage('');
+            }}
           >
-            <Container>
-              <Navbar.Brand href="#home">Messenger</Navbar.Brand>
-              <Navbar.Collapse id="basic-navbar-nav"></Navbar.Collapse>
-              <Nav className="justify-content-end">
-                <button type="submit" onClick={this.download}>
-                  {' '}
-                  <BsDownload />{' '}
-                </button>
-              </Nav>
-            </Container>
-          </Navbar>
-        </Row>
-
-        <MessageList messages={this.state.messages} />
-        <SendMessageForm sendMessage={this.sendMessage} />
-      </Container>
-    );
-  }
+            <Form.Control
+              type="text"
+              placeholder={placeHolder}
+              onChange={(e) => setMessage(e.target.value)}
+              value={message}
+            />
+          </Form>
+        </Col>
+        <Col md={2} lg={2}>
+          <Button
+            onClick={props.respond}
+            className="btn-success"
+            style={{
+              fontSize: '.6em',
+              padding: '5px',
+              height: '75%',
+            }}
+          >
+            {' '}
+            Model response{' '}
+          </Button>
+        </Col>
+      </Row>
+    </Container>
+  );
 }

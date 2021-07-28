@@ -1,33 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import App from './App';
 import reportWebVitals from './reportWebVitals';
-
-import Messenger from './Messenger';
-
-class Example extends React.Component {
-  // Code
-
-  messageHook(messageArray) {
-    /* [
-        {
-            "senderId": "Bot", // "User"
-            "text": "Hello there and welcome!",
-            "time": "2021-07-28T09:15:14.975Z"
-        }, ...
-      ]
-    */
-    console.log(messageArray);
-  }
-
-  render() {
-    return <Messenger messageHook={this.messageHook} />;
-  }
-}
 
 ReactDOM.render(
   <React.StrictMode>
-    <Example />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
